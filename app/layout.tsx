@@ -17,7 +17,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <div className="app-layout">
-            <Header />
+            <Header /> {/* Ensure this is the only Header rendered */}
             <main className="container mx-auto p-4">{children}</main>
             <footer className="footer text-center p-4">
               <p>© 2024 Fotis Agro Trading Platform</p>

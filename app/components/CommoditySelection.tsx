@@ -11,7 +11,11 @@ interface CommoditySelectorProps {
 const CommoditySelector: React.FC<CommoditySelectorProps> = ({ commodities, selectedCommodity, onSelect }) => {
   return (
     <div className="commodity-selector">
-      <select value={selectedCommodity} onChange={(e) => onSelect(e.target.value)}>
+      <select 
+        value={selectedCommodity} 
+        onChange={(e) => onSelect(e.target.value)}
+        className="p-2 border rounded-md"
+      >
         {commodities.map((commodity) => (
           <option key={commodity} value={commodity}>
             {commodity}

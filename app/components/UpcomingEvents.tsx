@@ -1,11 +1,11 @@
 import React from 'react';
 
 const events = [
-  { time: '11:30', event: 'API Weekly Crude Oil Stock',},
-  { time: '05:30', event: 'EIA Crude Oil Stocks Change'},
-  { time: '03:30', event: 'Building Permits (MoM)', },
-  { time: '05:30', event: 'EIA Natural Gas Storage Chan...' },
-  { time: '08:00', event: 'Baker Hughes US Oil Rig Count'},
+  { time: '11:30', event: 'Soybean prices drop by 2.5% as supply slows.',},
+  { time: '05:30', event: 'EIA Crude Oil Stocks Change.'},
+  { time: '03:30', event: 'Sesame prices rise by 1.5% as demand increases.', },
+  { time: '05:30', event: 'Coffee prices fall by 2% as supply increases.', },
+  { time: '08:00', event: 'Maize prices rise by 1% as demand increases.', },
   { time: '10:30', event: 'CFTC Gold NC Net Positions'},
 ];
 

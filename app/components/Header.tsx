@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
+import Logo from '../public/images/logo.png';
 
 interface MarketDataItem {
   name: string;
@@ -23,14 +24,14 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, marketData = [] }) 
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Image
-            src="/images/logo.png"
+            src={Logo}
             alt="Fotis Agro Logo"
-            width={100}
-            height={40}
+            width={70}
+            height={50}
             className="object-contain"
           />
           <h1 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Fotis Agro
+            
           </h1>
         </div>
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />

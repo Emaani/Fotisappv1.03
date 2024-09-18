@@ -1,6 +1,6 @@
 
 export const events = [
-    { time: '11:30', title: 'API Weekly Crude Oil Stock' },
+    { time: '11:30', title: 'Soybean prices drop by 2.5% as supply slows' },
     { time: '05:30', title: 'EIA Crude Oil Stocks Change' },
     { time: '03:30', title: 'Building Permits (MoM)' },
     { time: '05:30', title: 'EIA Natural Gas Storage Change' },

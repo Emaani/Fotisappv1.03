@@ -14,10 +14,11 @@ interface CommodityData {
 }
 
 const hardcodedData: CommodityData[] = [
-  { name: 'Soybeans', price: 10.23, change: -0.14, changePercentage: -1.32 },
-  { name: 'Coffee', price: 247.79, change: 1.27, changePercentage: 0.52 },
-  { name: 'Corn', price: 3.93, change: -0.02, changePercentage: -0.41 },
-  { name: 'Sesame', price: 5.67, change: 0.05, changePercentage: 0.89 },
+  { name: 'Soybeans', price: 2500, change: -0.14, changePercentage: -1.32 },
+  { name: 'Coffee', price: 13000, change: 1.27, changePercentage: 0.52 },
+  { name: 'Maize', price: 900, change: -0.02, changePercentage: -0.41 },
+  { name: 'Sesame', price: 6000, change: 0.05, changePercentage: 0.89 },
+  { name: 'Sunflower', price: 1300, change: 0.05, changePercentage: 0.89 },
 ];
 
 const Dashboard: React.FC = () => {
