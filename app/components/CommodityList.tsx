@@ -15,7 +15,7 @@ interface CommodityListProps {
 const CommodityList: React.FC<CommodityListProps> = ({ commodities, setSelectedCommodity }) => {
   return (
     <div className="bg-gray-800 p-4 rounded-lg">
-      <h2 className="text-xl font-bold mb-4">COMMODITIES</h2>
+      <h2 className="text-xl font-bold mb-4">Commodities</h2>
       <div className="space-y-2">
         {commodities.map(commodity => (
           <div 

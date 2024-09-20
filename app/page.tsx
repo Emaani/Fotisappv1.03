@@ -1,11 +1,23 @@
 'use client'
-
-import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
+import React, { useState } from 'react';
+import { useTheme } from './components/ThemeContext'; // Adjust the import path as needed
 import PriceChart from './components/PriceChart';
 import CommodityList from './components/CommodityList';
 import UpcomingEvents from './components/UpcomingEvents';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import SignUp from './components/SignUp';
+import Navigation from './components/Navigation';
+import Login from './components/Login';
 
+  
+
+<Router>
+  <Navigation />
+  <Switch>
+    <Route path="/signup" component={SignUp} />
+    <Route path="/login" component={Login} />
+  </Switch>
+</Router>
 interface CommodityData {
   name: string;
   price: number;
@@ -23,26 +35,17 @@ const hardcodedData: CommodityData[] = [
 
 const Dashboard: React.FC = () => {
   const [selectedCommodity, setSelectedCommodity] = useState<string>('Soybeans');
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
-
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
+  const { theme } = useTheme();
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-      <Header theme={theme} toggleTheme={toggleTheme} marketData={hardcodedData} />
       <main className="container mx-auto p-4 grid grid-cols-3 gap-4">
         <div className="col-span-2">
-          <PriceChart selectedCommodity={selectedCommodity} theme={theme} />
+          <PriceChart selectedCommodity={selectedCommodity} theme={theme as "light" | "dark"} />
         </div>
         <div>
-          <CommodityList 
-            commodities={hardcodedData} 
+          <CommodityList
+            commodities={hardcodedData}
             setSelectedCommodity={setSelectedCommodity}
           />
           <UpcomingEvents />
