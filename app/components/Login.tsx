@@ -1,39 +1,37 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const LoginPage = () => {
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState(''); // Added password field for login
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Login submitted with phone:', phone);
-    // Implement actual login logic here
+
+    try {
+      const res = await axios.post('/api/auth/login', { phone, password });
+      setSuccessMessage('Login successful!');
+      console.log('Login successful:', res.data);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data?.message || 'Error logging in');
+      console.error('Error logging in:', error);
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-1/2 bg-black p-12 flex flex-col justify-center">
         <h2 className="text-white text-3xl font-bold mb-4">Trade with confidence</h2>
-        <p className="text-gray-400 mb-8">Your funds are always backed 1:1 on OKX with our regularly published audits on our Proof of Reserves</p>
+        <p className="text-gray-400 mb-8">The Harvest is plenty but the Labourers are few</p>
         <div className="bg-gray-900 rounded-lg p-4">
-          <div className="flex items-center justify-between text-white mb-4">
-            <span>BTC/USDT</span>
-            <span>⭐ ↗</span>
-          </div>
-          <div className="text-green-500 text-4xl font-bold">72,859.8</div>
-          <div className="text-green-500">+$72,880.20 +1.97%</div>
-          {/* Add more chart details here */}
+          {/* Add market details here */}
         </div>
       </div>
       <div className="w-1/2 p-12 flex flex-col justify-center">
         <h1 className="text-3xl font-bold mb-8">Log in</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <div className="flex border-b border-gray-300">
-              <button className="text-gray-500 px-2">Phone</button>
-              <button className="text-gray-500 px-2">Email / Sub-account</button>
-              <button className="text-gray-500 px-2">QR code</button>
-            </div>
-          </div>
           <div className="mb-4">
             <input
               type="tel"
@@ -41,14 +39,27 @@ const LoginPage = () => {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Enter phone number"
               className="w-full p-2 border rounded"
+              required
             />
           </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          {successMessage && <p className="text-green-500">{successMessage}</p>}
           <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
-            Next
+            Log in
           </button>
         </form>
         <p className="mt-4 text-center">
-          Dont have an account? <a href="#" className="text-blue-600">Sign up</a>
+          Dont have an account? <a href="/signup" className="text-blue-600">Sign up</a>
         </p>
         <div className="flex justify-center mt-4">
           <button className="mx-2">Google</button>
@@ -57,7 +68,7 @@ const LoginPage = () => {
           <button className="mx-2">Wallet</button>
         </div>
         <p className="text-xs text-center mt-4 text-gray-500">
-           All Rights Reserved to Fotis Agro
+          All Rights Reserved to Fotis Agro
         </p>
       </div>
     </div>

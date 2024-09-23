@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User';
+import { User } from '../models/user';
 
 export const signup = async (req: Request, res: Response) => {
   const { username, email, password, country } = req.body;
@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } }) as User; // Cast to User type
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
