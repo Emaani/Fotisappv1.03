@@ -13,6 +13,8 @@ const hardcodedData = [
   { name: 'Soybeans', price: 2500, change: -0.14, changePercentage: -1.32 },
   { name: 'Coffee', price: 13000, change: 1.27, changePercentage: 0.52 },
   { name: 'Maize', price: 900, change: -0.02, changePercentage: -0.41 },
+  { name: 'Sesame', price: 6000, change: 0.05, changePercentage: 0.52 },
+  { name: 'Sunflower', price: 1300, change: 0.01, changePercentage: 0.52 },
   // ... other commodities
 ];
 
