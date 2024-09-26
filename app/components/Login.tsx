@@ -1,26 +1,31 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'; // Add import
+import { useState } from 'react'; // Add this line
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const router = useRouter();
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      console.log('Login successful', response.data);
-
-      // Redirect after successful login
-      router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'Error logging in.');
+  const handleLogin = async () => {
+    // Your login logic here
+    console.log('Login button clicked'); // Debugging line
+    // Simulate successful login for testing
+    const success = true; // Replace with actual login logic
+    if (!success) {
+      setError('Login failed. Please try again.'); // Set error message
+    } else {
+      setError(null); // Clear error on successful login
+      router.push('/Login/page'); // Ensure this is the correct path
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleLogin(); // Call handleLogin on form submit
+  };
+
+  const redirectToLogin = () => {
+    router.push('/Login/page'); // Redirect to the Login page
   };
 
   return (
@@ -35,8 +40,8 @@ const LoginPage = () => {
           <div className="mb-4">
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={credentials.username}
+              onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
               placeholder="Enter email"
               className="w-full p-2 border rounded"
               required
@@ -45,14 +50,18 @@ const LoginPage = () => {
           <div className="mb-4">
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={credentials.password}
+              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
               placeholder="Enter password"
               className="w-full p-2 border rounded"
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+          <button 
+            type="button" 
+            onClick={redirectToLogin} // Call redirect function on button click
+            className="w-full bg-blue-600 text-white py-2 rounded"
+          >
             Log In
           </button>
         </form>

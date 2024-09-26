@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 const SignUpPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState(''); // Added initial state for email
+  const [password, setPassword] = useState(''); // Added initial state for password
+  const [error, setError] = useState(''); // Added initial state for error
   const router = useRouter(); // Call useRouter directly
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,12 +25,12 @@ const SignUpPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <div className="w-1/2 bg-black p-12 flex flex-col justify-center">
-        <h2 className="text-green-500 text-3xl font-bold mb-4 text-center">Welcome to Fotis Agro</h2>
-        <p className="text-white-600 text-sm mb-4 text-center">The harvest is plenty, the Labourers are few.</p>
+      <div className="w-1/2 bg-[#111826] p-12 flex flex-col justify-center">
+        <h2 style={{ color: '#9ABF49' }} className="text-3xl font-bold mb-4 text-center">Welcome to Fotis Agro</h2>
+        <p className="text-white text-center">The harvest is plenty, the Labourers are few.</p>
       </div>
       <div className="w-1/2 p-12 flex flex-col justify-center">
-        <h1 className="text-green-500 text-4xl font-bold mb-8 text-center">Sign Up</h1>
+        <h1 style={{ color: '#9ABF49' }} className="text-4xl font-bold mb-8 text-center">Sign Up</h1>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

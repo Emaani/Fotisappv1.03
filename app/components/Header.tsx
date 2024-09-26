@@ -34,8 +34,8 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
           <Image
             src={Logo}
             alt="Fotis Agro Logo"
-            width={60}
-            height={45}
+            width={70}
+            height={55}
             className="object-contain"
           />
         </div>
@@ -67,17 +67,19 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
             </button>
           </Link>
 
-          <button
-            className="
-              font-sans text-sm font-semibold h-10 
-              rounded-md px-4 text-gray-300 bg-black 
-              hover:bg-gray-800 hover:text-gray-500
-              shadow-lg focus:outline-none transition-all
-              flex items-center space-x-2
-            "
-          >
-            <FaSignInAlt /> <span>Log In</span>
-          </button>
+          <Link href="/Login"> {/* Wrap the button with Link */}
+            <button
+              className="
+                font-sans text-sm font-semibold h-10 
+                rounded-md px-4 text-gray-300 bg-black 
+                hover:bg-gray-800 hover:text-gray-500
+                shadow-lg focus:outline-none transition-all
+                flex items-center space-x-2
+              "
+            >
+              <FaSignInAlt /> <span>Log In</span>
+            </button>
+          </Link>
 
           <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
         </div>

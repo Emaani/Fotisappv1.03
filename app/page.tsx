@@ -4,8 +4,8 @@ import { useTheme } from './components/ThemeContext'; // Adjust the import path 
 import PriceChart from './components/PriceChart';
 import CommodityList from './components/CommodityList';
 import UpcomingEvents from './components/UpcomingEvents';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import SignUp from './components/SignUp';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import SignUp from './components/Signup';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 
@@ -13,10 +13,10 @@ import Login from './components/Login';
 
 <Router>
   <Navigation />
-  <Switch>
-    <Route path="/signup" component={SignUp} />
-    <Route path="/login" component={Login} />
-  </Switch>
+  <Routes>
+    <Route path="/signup" element={<SignUp />} />
+    <Route path="/login" element={<Login />} />
+  </Routes>
 </Router>
 interface CommodityData {
   name: string;
