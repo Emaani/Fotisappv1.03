@@ -2,7 +2,7 @@ import React from 'react';
 
 const events = [
   { time: '11:30', event: 'Commodity prices increase after Karuma closure.',},
-  { time: '05:30', event: 'Coffeefarmers smiling to the bank.'},
+  { time: '05:30', event: 'Coffee farmers smiling to the bank.'},
   { time: '03:30', event: 'Sesame prices rise by 1.5% as demand increases.', },
   { time: '05:30', event: 'Coffee prices fall by 2% as supply increases.', },
   { time: '08:00', event: 'Maize prices rise by 1% as demand increases.', },

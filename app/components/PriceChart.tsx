@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useMemo, useState } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 
@@ -10,19 +10,20 @@ interface PriceChartProps {
 }
 
 const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => {
-  const [price, setPrice] = useState<number | null>(null);
+  // Removed unused price state
+  // const [price, setPrice] = useState<number | null>(null);
 
   const lineChartRef = useRef<HTMLCanvasElement | null>(null);
   const pieChartRef = useRef<HTMLCanvasElement | null>(null);
   const lineChartInstance = useRef<Chart | null>(null);
   const pieChartInstance = useRef<Chart | null>(null);
 
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], []); // Wrapped in useMemo
 
   // Generate synchronized data
   const data = useMemo(() => {
     return months.map(() => Math.random() * 1000 + 500);
-  }, [selectedCommodity]);
+  }, [months]); // Removed 'selectedCommodity' from the dependency array
 
   // Calculate total and percentages for pie chart
   const total = data.reduce((sum, value) => sum + value, 0);
@@ -58,14 +59,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
         }
       }
     }
-  }), [selectedCommodity, theme, data]);
+  }), [selectedCommodity, theme, data, months]); // Added 'months' to the dependency array
 
   const pieChartConfig = useMemo<ChartConfiguration>(() => ({
     type: 'doughnut',
     data: {
       labels: months,
       datasets: [{
-        data: percentages,
+        data: percentages as unknown as number[], // Cast percentages to number[]
         backgroundColor: [
           '#8b0000', '#ff0000', '#ffc0cb', '#ff69b4', '#00ff00', '#90ee90', '#32cd32', '#006400',
           '#4169e1', '#0000ff', '#00008b', '#4b0082'
@@ -85,7 +86,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
       },
       cutout: '70%'
     }
-  }), [percentages]);
+  }), [percentages, months]); // Added 'months' to the dependency array
 
   useEffect(() => {
     if (!lineChartRef.current || !pieChartRef.current) return;
@@ -135,7 +136,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
             <div key={index} className="flex items-center mb-1">
               <div 
                 className="w-3 h-3 mr-2" 
-                style={{ backgroundColor: pieChartConfig.data.datasets[0]?.backgroundColor?.[index] || 'transparent' }}
+                style={{ backgroundColor: (pieChartConfig.data.datasets[0].backgroundColor as string[])[index] || 'transparent' }}
               ></div>
               <div className="text-sm">{month}: {percentages[index]}%</div>
             </div>
