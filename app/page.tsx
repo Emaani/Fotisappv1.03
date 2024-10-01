@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState } from 'react';
 import { useTheme } from './components/ThemeContext'; // Adjust the import path as needed
 import PriceChart from './components/PriceChart';
@@ -15,7 +16,7 @@ import Login from './components/Login';
   <Navigation />
   <Routes>
     <Route path="/signup" element={<SignUp />} />
-    <Route path="/login" element={<Login />} />
+    <Route path="/Login" element={<Login />} />
   </Routes>
 </Router>
 interface CommodityData {

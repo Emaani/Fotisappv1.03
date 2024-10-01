@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios'; // Import AxiosError
 import { useRouter } from 'next/navigation';
 
 const SignUpPage = () => {
@@ -18,8 +18,9 @@ const SignUpPage = () => {
       const response = await axios.post('/api/auth/signup', { email, password });
       console.log('Signup successful', response.data);
       router.push('/login'); // Use router here
-    } catch (error: any) {
-      setError(error.response?.data?.message || 'An error occurred during signup.');
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>; // Specify the response data type
+      setError(axiosError.response?.data?.message || 'An error occurred during signup.');
     }
   };
 
@@ -27,7 +28,7 @@ const SignUpPage = () => {
     <div className="flex min-h-screen bg-gray-100">
       <div className="w-1/2 bg-[#111826] p-12 flex flex-col justify-center">
         <h2 style={{ color: '#9ABF49' }} className="text-3xl font-bold mb-4 text-center">Welcome to Fotis Agro</h2>
-        <p className="text-white text-center">The harvest is plenty, the Labourers are few.</p>
+        <p className="text-white-600 text-sm mb-4 text-center">The harvest is plenty, the Labourers are few.</p>
       </div>
       <div className="w-1/2 p-12 flex flex-col justify-center">
         <h1 style={{ color: '#9ABF49' }} className="text-4xl font-bold mb-8 text-center">Sign Up</h1>

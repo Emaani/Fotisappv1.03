@@ -5,7 +5,7 @@ import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from './ThemeContext'; // Import your theme context
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa'; // Import icons
-import Logo from '../../public/images/logo.png'; // path to logo
+import Logo from '../../public/images/logo.png'; // Path to logo
 import Link from 'next/link'; // Import Link for routing
 
 interface MarketDataItem {
@@ -26,18 +26,22 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
     <header
       className={`sticky top-0 z-50 p-4 ${
         theme === 'dark' ? 'bg-gray-900' : 'bg-white'
-      } shadow-md`} // Apply sticky, top-0 and z-50 to keep it at the top of the page
+      } shadow-md`}
     >
       <div className="container mx-auto flex justify-between items-center">
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-4">
-          <Image
-            src={Logo}
-            alt="Fotis Agro Logo"
-            width={70}
-            height={55}
-            className="object-contain"
-          />
+          <Link href="/" passHref> {/* Redirect to Home page on logo click */}
+            <a>
+              <Image
+                src={Logo}
+                alt="Fotis Agro Logo"
+                width={70}
+                height={55}
+                className="object-contain cursor-pointer"
+              />
+            </a>
+          </Link>
         </div>
 
         {/* Right Section: Buttons and Theme Toggle */}

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
-import { connectDB } from './config/db';
+import connectDB from './config/db'; // Changed to default import
 
 const app = express();
 

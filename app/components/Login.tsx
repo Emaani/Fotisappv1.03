@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router'; // Add import
-import { useState } from 'react'; // Add this line
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const LoginPage = () => {
   const router = useRouter();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
@@ -15,17 +15,13 @@ const LoginPage = () => {
       setError('Login failed. Please try again.'); // Set error message
     } else {
       setError(null); // Clear error on successful login
-      router.push('/Login/page'); // Ensure this is the correct path
+      router.push('/dashboard'); // Ensure this is the correct path
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleLogin(); // Call handleLogin on form submit
-  };
-
-  const redirectToLogin = () => {
-    router.push('/Login/page'); // Redirect to the Login page
   };
 
   return (
@@ -40,10 +36,11 @@ const LoginPage = () => {
           <div className="mb-4">
             <input
               type="email"
-              value={credentials.username}
-              onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+              value={credentials.email}
+              onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
               placeholder="Enter email"
               className="w-full p-2 border rounded"
+              style={{ color: 'black', backgroundColor: 'white' }} // Ensures visible input
               required
             />
           </div>
@@ -58,8 +55,7 @@ const LoginPage = () => {
             />
           </div>
           <button 
-            type="button" 
-            onClick={redirectToLogin} // Call redirect function on button click
+            type="submit"  // Changed to "submit" to properly handle form submission
             className="w-full bg-blue-600 text-white py-2 rounded"
           >
             Log In
