@@ -46,16 +46,18 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
 
         {/* Right Section: Buttons and Theme Toggle */}
         <div className="flex items-center space-x-4 ml-auto">
-          <button
-            className="
-              font-sans text-xs font-semibold h-10 
-              rounded-md px-4 text-gray-300 bg-black 
-              hover:bg-gray-800 hover:text-gray-500
-              shadow-lg focus:outline-none transition-all
-            "
-          >
-            Buy Commodities
-          </button>
+          <Link href="/buy-commodities">
+            <button
+              className="
+                font-sans text-xs font-semibold h-10 
+                rounded-md px-4 text-gray-300 bg-black 
+                hover:bg-gray-800 hover:text-gray-500
+                shadow-lg focus:outline-none transition-all
+              "
+            >
+              Buy Commodities
+            </button>
+          </Link>
 
           <Link href="/signup">
             <button
