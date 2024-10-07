@@ -9,16 +9,18 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import SignUp from './components/Signup';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
+import Link from 'next/link';
 
-  
-
-<Router>
-  <Navigation />
-  <Routes>
-    <Route path="/signup" element={<SignUp />} />
-    <Route path="/Login" element={<Login />} />
-  </Routes>
-</Router>
+<div>
+    <Link href="/TradeCommodities">Trade Commodities</Link>
+    <Router>
+      <Navigation />
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/Login" element={<Login />} />
+      </Routes>
+    </Router>
+</div>
 interface CommodityData {
   name: string;
   price: number;
@@ -50,6 +52,7 @@ const Dashboard: React.FC = () => {
             setSelectedCommodity={setSelectedCommodity}
           />
           <UpcomingEvents />
+        
         </div>
       </main>
     </div>

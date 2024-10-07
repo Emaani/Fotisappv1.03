@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
         {/* Left Section: Logo */}
         <div className="flex items-center space-x-4">
           <Link href="/" passHref> {/* Redirect to Home page on logo click */}
-            <a>
+            
               <Image
                 src={Logo}
                 alt="Fotis Agro Logo"
@@ -40,13 +40,13 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
                 height={55}
                 className="object-contain cursor-pointer"
               />
-            </a>
+            
           </Link>
         </div>
 
         {/* Right Section: Buttons and Theme Toggle */}
         <div className="flex items-center space-x-4 ml-auto">
-          <Link href="/buy-commodities">
+          <Link href="/TradeCommodities">
             <button
               className="
                 font-sans text-xs font-semibold h-10 
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
                 shadow-lg focus:outline-none transition-all
               "
             >
-              Buy Commodities
+              Trade Commodities
             </button>
           </Link>
 

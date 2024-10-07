@@ -1,20 +1,23 @@
-'use client'
-
 import React from 'react';
 
-interface CommoditySelectorProps {
-  commodities: string[];
+interface CommoditySelectionProps {
   selectedCommodity: string;
-  onSelect: (commodity: string) => void;
+  onCommodityChange: (commodity: string) => void;
 }
 
-const CommoditySelector: React.FC<CommoditySelectorProps> = ({ commodities, selectedCommodity, onSelect }) => {
+const commodities = ['Soybeans', 'Corn', 'Wheat', 'Coffee'];
+
+const CommoditySelection: React.FC<CommoditySelectionProps> = ({ selectedCommodity, onCommodityChange }) => {
   return (
-    <div className="commodity-selector">
-      <select 
-        value={selectedCommodity} 
-        onChange={(e) => onSelect(e.target.value)}
-        className="p-2 border rounded-md"
+    <div>
+      <label htmlFor="commodity" className="block text-lg font-medium">
+        Select Commodity:
+      </label>
+      <select
+        id="commodity"
+        value={selectedCommodity}
+        onChange={(e) => onCommodityChange(e.target.value)}
+        className="mt-2 block w-full p-2 border border-gray-300 rounded-md"
       >
         {commodities.map((commodity) => (
           <option key={commodity} value={commodity}>
@@ -26,4 +29,4 @@ const CommoditySelector: React.FC<CommoditySelectorProps> = ({ commodities, sele
   );
 };
 
-export default CommoditySelector;
+export default CommoditySelection;
