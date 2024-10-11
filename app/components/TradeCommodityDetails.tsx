@@ -7,24 +7,43 @@ interface CommodityDetailsProps {
   setTradeAmount: (amount: number) => void;
   currentPrice: number;
   amountInStock: number;
+  setAmountInStock: (newStock: number) => void;  // Added setter for available stock
   tokenBalance: number;
+  currency: string;
 }
 
-const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({ commodity, tradeAmount, setTradeAmount, currentPrice, amountInStock, tokenBalance }) => {
+const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({
+  commodity,
+  tradeAmount,
+  setTradeAmount,
+  currentPrice,
+  amountInStock,
+  setAmountInStock,
+  tokenBalance,
+  currency
+}) => {
+
   const handleTradeAmountChange = (amount: number) => {
     setTradeAmount(amount);
+  };
+
+  const handleBuyCommodity = () => {
+    if (tradeAmount <= amountInStock) {
+      setAmountInStock(amountInStock - tradeAmount);
+    } else {
+      alert('Insufficient stock!');
+    }
   };
 
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold">{commodity} Trading</h3>
       <div className="flex items-center space-x-2">
-        {/* Replaced Coin component with a simple span or any relevant content */}
         <span className="text-yellow-500">Coin</span>
         <span>Token Balance: {tokenBalance.toFixed(2)}</span>
       </div>
       <div>
-        <p>Current Price: ${currentPrice.toFixed(2)}</p>
+        <p>Current Price: {currency}{currentPrice.toFixed(2)}</p>
         <p>Available Stock: {amountInStock}</p>
       </div>
       <div>
@@ -42,10 +61,11 @@ const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({ commodity, tra
         />
       </div>
       <div>
-        <p className="font-semibold">Total Cost: ${(tradeAmount * currentPrice).toFixed(2)}</p>
+        <p className="font-semibold">Total Cost: {currency}{(tradeAmount * currentPrice).toFixed(2)}</p>
       </div>
-      <div>
-        <Coins /> {/* Use the Coins icon here */}
+      <div className="flex justify-between items-center">
+    
+      <Coins />
       </div>
     </div>
   );

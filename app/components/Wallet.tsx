@@ -3,16 +3,10 @@ import { Coins, User, Clock } from 'lucide-react';
 
 interface WalletProps {
   tokenBalance: number;
+  purchaseHistory: { id: number; amount: number; date: string }[]; // Add purchase history prop
 }
 
-const Wallet: React.FC<WalletProps> = ({ tokenBalance }) => {
-  // Mock data for purchase history
-  const purchaseHistory = [
-    { id: 1, amount: 100, date: '2024-10-08' },
-    { id: 2, amount: 50, date: '2024-10-09' },
-    { id: 3, amount: 75, date: '2024-10-10' },
-  ];
-
+const Wallet: React.FC<WalletProps> = ({ tokenBalance, purchaseHistory = [] }) => { // Default to an empty array
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-semibold">Your Wallet</h3>
@@ -29,15 +23,19 @@ const Wallet: React.FC<WalletProps> = ({ tokenBalance }) => {
       <div>
         <h4 className="text-lg font-semibold mb-2">Purchase History</h4>
         <ul className="space-y-2">
-          {purchaseHistory.map((purchase) => (
-            <li key={purchase.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded">
-              <div className="flex items-center space-x-2">
-                <Clock className="text-gray-500" size={16} />
-                <span>{purchase.date}</span>
-              </div>
-              <span className="font-medium">{purchase.amount} Tokens</span>
-            </li>
-          ))}
+          {purchaseHistory.length > 0 ? (
+            purchaseHistory.map((purchase) => (
+              <li key={purchase.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                <div className="flex items-center space-x-2">
+                  <Clock className="text-gray-500" size={16} />
+                  <span>{purchase.date}</span>
+                </div>
+                <span className="font-medium">{purchase.amount} Tokens</span>
+              </li>
+            ))
+          ) : (
+            <li className="text-gray-500 dark:text-gray-400">No purchase history available.</li>
+          )}
         </ul>
       </div>
     </div>

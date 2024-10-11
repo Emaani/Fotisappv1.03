@@ -6,7 +6,7 @@ import PriceChart from './components/PriceChart';
 import CommodityList from './components/CommodityList';
 import UpcomingEvents from './components/UpcomingEvents';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import SignUp from './components/Signup';
+import SignUp from '../app/components/SignUp';
 import Navigation from './components/Navigation';
 import Login from './components/Login';
 import Link from 'next/link';
