@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
             setSelectedCommodity={setSelectedCommodity}
           />
           <UpcomingEvents />
-        
+          
         </div>
       </main>
     </div>
