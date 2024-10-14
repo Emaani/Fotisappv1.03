@@ -3,10 +3,10 @@ import { Coins, User, Clock } from 'lucide-react';
 
 interface WalletProps {
   tokenBalance: number;
-  purchaseHistory: { id: number; amount: number; date: string }[]; // Add purchase history prop
+  purchaseHistory: { id: number; amount: number; date: string; type: 'buy' | 'sell'; commodity: string }[]; // Update to include type and commodity
 }
 
-const Wallet: React.FC<WalletProps> = ({ tokenBalance, purchaseHistory = [] }) => { // Default to an empty array
+const Wallet: React.FC<WalletProps> = ({ tokenBalance, purchaseHistory = [] }) => {
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-semibold">Your Wallet</h3>
@@ -30,7 +30,7 @@ const Wallet: React.FC<WalletProps> = ({ tokenBalance, purchaseHistory = [] }) =
                   <Clock className="text-gray-500" size={16} />
                   <span>{purchase.date}</span>
                 </div>
-                <span className="font-medium">{purchase.amount} Tokens</span>
+                <span className="font-medium">{purchase.amount} Tokens ({purchase.commodity})</span> {/* Update this line */}
               </li>
             ))
           ) : (

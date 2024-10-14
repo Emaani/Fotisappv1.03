@@ -6,7 +6,6 @@ interface CommodityDetailsProps {
   setTradeAmount: (amount: number) => void;
   currentPrice: number | null;
   amountInStock: number;
-  tokenBalance: number;
   currency: string;
 }
 
@@ -16,7 +15,6 @@ const CommodityDetails: React.FC<CommodityDetailsProps> = ({
   setTradeAmount,
   currentPrice,
   amountInStock,
-  tokenBalance,
   currency,
 }) => {
   const handleTradeAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
