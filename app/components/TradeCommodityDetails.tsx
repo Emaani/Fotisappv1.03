@@ -4,12 +4,13 @@ import { Coins } from 'lucide-react';
 interface CommodityDetailsProps {
   commodity: string;
   tradeAmount: number;
-  setTradeAmount: (amount: number) => void;
+  setTradeAmount: React.Dispatch<React.SetStateAction<number>>;
   currentPrice: number;
   amountInStock: number;
-  setAmountInStock: (newStock: number) => void;  // Added setter for available stock
+  setAmountInStock: React.Dispatch<React.SetStateAction<number>>;
   tokenBalance: number;
   currency: string;
+  onPurchase: (action: 'buy' | 'sell') => Promise<void>;
 }
 
 const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({
@@ -20,16 +21,18 @@ const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({
   amountInStock,
   setAmountInStock,
   tokenBalance,
-  currency
+  currency,
+  onPurchase
 }) => {
 
   const handleTradeAmountChange = (amount: number) => {
     setTradeAmount(amount);
   };
 
-  const handleBuyCommodity = () => {
+  const handleBuyCommodity = async () => {
     if (tradeAmount <= amountInStock) {
       setAmountInStock(amountInStock - tradeAmount);
+      await onPurchase('buy'); // Use onPurchase here
     } else {
       alert('Insufficient stock!');
     }
@@ -64,8 +67,14 @@ const TradeCommodityDetails: React.FC<CommodityDetailsProps> = ({
         <p className="font-semibold">Total Cost: {currency}{(tradeAmount * currentPrice).toFixed(2)}</p>
       </div>
       <div className="flex justify-between items-center">
-    
-      <Coins />
+        <Coins />
+        {/* Remove the Buy button */}
+        {/* <button 
+          onClick={handleBuyCommodity} // Call the function here
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Buy
+        </button> */}
       </div>
     </div>
   );

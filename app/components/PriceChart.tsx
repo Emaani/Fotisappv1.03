@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 
@@ -10,24 +10,27 @@ interface PriceChartProps {
 }
 
 const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => {
-  // Removed unused price state
-  // const [price, setPrice] = useState<number | null>(null);
-
   const lineChartRef = useRef<HTMLCanvasElement | null>(null);
   const pieChartRef = useRef<HTMLCanvasElement | null>(null);
   const lineChartInstance = useRef<Chart | null>(null);
   const pieChartInstance = useRef<Chart | null>(null);
 
-  const months = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], []); // Wrapped in useMemo
+  const months = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], []);
 
-  // Generate synchronized data
-  const data = useMemo(() => {
-    return months.map(() => Math.random() * 1000 + 500);
-  }, [months]); // Removed 'selectedCommodity' from the dependency array
+  // Move the data generation to client-side only by using useState and useEffect
+  const [data, setData] = useState<number[]>([]); // Store the data after client-side render
+  const [percentages, setPercentages] = useState<string[]>([]); // Store the calculated percentages
 
-  // Calculate total and percentages for pie chart
-  const total = data.reduce((sum, value) => sum + value, 0);
-  const percentages = data.map(value => ((value / total) * 100).toFixed(2));
+  useEffect(() => {
+    // Generate random data after client-side hydration
+    const generatedData = months.map(() => Math.random() * 1000 + 500);
+    setData(generatedData);
+
+    // Calculate percentages
+    const total = generatedData.reduce((sum, value) => sum + value, 0);
+    const calculatedPercentages = generatedData.map(value => ((value / total) * 100).toFixed(2));
+    setPercentages(calculatedPercentages);
+  }, [months]);
 
   const lineChartConfig = useMemo<ChartConfiguration>(() => ({
     type: 'line',
@@ -59,7 +62,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
         }
       }
     }
-  }), [selectedCommodity, theme, data, months]); // Added 'months' to the dependency array
+  }), [selectedCommodity, theme, data, months]);
 
   const pieChartConfig = useMemo<ChartConfiguration>(() => ({
     type: 'doughnut',
@@ -86,7 +89,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
       },
       cutout: '70%'
     }
-  }), [percentages, months]); // Added 'months' to the dependency array
+  }), [percentages, months]);
 
   useEffect(() => {
     if (!lineChartRef.current || !pieChartRef.current) return;
@@ -115,8 +118,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
     };
   }, [lineChartConfig, pieChartConfig]);
 
-  // Calculate net outflow (example calculation)
-  const netOutflow = (data[data.length - 1] - data[0]).toFixed(2);
+  // Calculate net outflow
+  const netOutflow = data.length ? (data[data.length - 1] - data[0]).toFixed(2) : '0.00';
 
   return (
     <div className={`${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'} p-4`}>
@@ -144,8 +147,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedCommodity, theme }) => 
         </div>
       </div>
       <div className="mt-4 text-center">
-        <span className="mr-4">Inflow: <span className="font-bold">{data[0].toFixed(2)}</span></span>
-        <span>Outflow: <span className="font-bold">{data[data.length - 1].toFixed(2)}</span></span>
+        <span className="mr-4">Inflow: <span className="font-bold">{data.length ? data[0].toFixed(2) : '0.00'}</span></span>
+        <span>Outflow: <span className="font-bold">{data.length ? data[data.length - 1].toFixed(2) : '0.00'}</span></span>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const TradeCommoditiesPage: React.FC = () => {
   const [mobileNumber, setMobileNumber] = useState(""); // State to store mobile number
   const [showMobileInput, setShowMobileInput] = useState(false); // State to control mobile number prompt
   const { pricePerUnit, loading: priceLoading } = useCommodityPrice(selectedCommodity);
-  const { tokenBalance, loading: balanceLoading, setTokenBalance } = useTokenBalance(); // Ensure setTokenBalance is available
+  const { tokenBalance, loading: balanceLoading, refreshBalance } = useTokenBalance(); // Use refreshBalance instead of setTokenBalance
   const { purchaseTokens: buyTokens, purchaseSuccess, loading: purchaseLoading } = useTokenPurchase();
 
   // Function to handle commodity change
@@ -53,7 +53,7 @@ const TradeCommoditiesPage: React.FC = () => {
             commodity: selectedCommodity
           }
         ]);
-        setTokenBalance(prevBalance => prevBalance - totalCost); // Update token balance
+        refreshBalance(); // Call without arguments to refresh token balance
       } catch (error) {
         console.error('Error purchasing tokens:', error);
       } finally {
@@ -82,10 +82,10 @@ const TradeCommoditiesPage: React.FC = () => {
       setProcessing(true); // Show processing feedback
 
       // Call the purchase function from MobileMoney API
-      const response = await purchaseTokens(mobileNumber, totalCost);
+      const response = await purchaseTokens(totalCost); // Ensure purchaseTokens returns { success: boolean, error?: string }
       
-      if (response.success) {
-        setTokenBalance(prevBalance => prevBalance + tradeAmount); // Add tokens to wallet
+      if (response && response.success !== undefined) { // Check if response is defined and success is a boolean
+        refreshBalance(); // Call without arguments to refresh token balance
         setTransactions(prevTransactions => [
           ...prevTransactions,
           {

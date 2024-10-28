@@ -1,43 +1,61 @@
-import { NextResponse } from 'next/server';
-import { hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
-import db from '@/server/config/db';
+// app/api/auth/signup/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { hash } from 'bcryptjs'
+import { createUser, findUserByEmail } from '../userService'
+import { sign } from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
-
-export async function POST(request: Request) {
-  const { username, email, password } = await request.json();
-
-  if (!username || !email || !password) {
-    return NextResponse.json({ error: 'Username, email, and password are required' }, { status: 400 });
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const existingUser = await db.query('SELECT * FROM users WHERE email = $1 OR username = $2', [email, username]);
-    if (existingUser.rows.length > 0) {
-      return NextResponse.json({ message: 'User with this email or username already exists' }, { status: 400 });
+    const { email, password } = await req.json()
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      )
     }
 
-    const hashedPassword = await hash(password, 10);
+    // Check for existing user
+    const existingUser = await findUserByEmail(email)
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'User already exists' },
+        { status: 409 }
+      )
+    }
 
-    const newUser = await db.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email',
-      [username, email, hashedPassword]
-    );
+    // Hash password
+    const hashedPassword = await hash(password, 12)
 
-    const token = sign({ userId: newUser.rows[0].id }, JWT_SECRET, { expiresIn: '1h' });
+    // Create user
+    const user = await createUser({
+      email,
+      password: hashedPassword,
+    })
 
-    return NextResponse.json({
-      message: 'User signed up successfully',
-      token,
-      user: {
-        id: newUser.rows[0].id,
-        username: newUser.rows[0].username,
-        email: newUser.rows[0].email
-      }
-    }, { status: 201 });
-  } catch (err) {
-    console.error('Error in signup:', err);
-    return NextResponse.json({ message: 'An error occurred during signup' }, { status: 500 });
+    // Create session token
+    const token = sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET || 'fallback-secret',
+      { expiresIn: '24h' }
+    )
+
+    // Set cookie with token
+    const response = NextResponse.redirect(new URL('/TradeCommodities', req.url))
+    response.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 86400 // 24 hours
+    })
+
+    return response
+
+  } catch (error) {
+    console.error('Signup error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }
