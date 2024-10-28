@@ -1,60 +1,57 @@
-// app/api/auth/signup/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { hash } from 'bcryptjs'
-import { createUser, findUserByEmail } from '../userService'
-import { sign } from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+import  prisma  from '@/app/lib/prisma'
+import { z } from 'zod'
 
-export async function POST(req: NextRequest) {
+const signupSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+})
+
+export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await req.json()
+    const body = await request.json()
+    const { email, password } = signupSchema.parse(body)
 
-    if (!email || !password) {
+    // Check if user already exists
+    const existingUser = await prisma.users.findUnique({
+      where: { email }
+    })
+
+    if (existingUser) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { message: 'User already exists' },
         { status: 400 }
       )
     }
 
-    // Check for existing user
-    const existingUser = await findUserByEmail(email)
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists' },
-        { status: 409 }
-      )
-    }
-
     // Hash password
-    const hashedPassword = await hash(password, 12)
+    const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
-    const user = await createUser({
-      email,
-      password: hashedPassword,
+    // Create new user
+    const user = await prisma.users.create({
+      data: {
+        email,
+        password: hashedPassword,
+      }
     })
 
-    // Create session token
-    const token = sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '24h' }
-    )
-
-    // Set cookie with token
-    const response = NextResponse.redirect(new URL('/TradeCommodities', req.url))
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 86400 // 24 hours
-    })
-
-    return response
+    // Return user ID for profile setup
+    return NextResponse.json({
+      message: 'User created successfully',
+      userId: user.id
+    }, { status: 201 })
 
   } catch (error) {
     console.error('Signup error:', error)
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { message: 'Invalid input data', errors: error.errors },
+        { status: 400 }
+      )
+    }
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { message: 'Internal server error' },
       { status: 500 }
     )
   }

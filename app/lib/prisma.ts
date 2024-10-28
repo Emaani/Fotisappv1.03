@@ -1,20 +1,21 @@
-// lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
 
 declare global {
-  // Prevents TypeScript from erroring on the global prisma variable
-  const prisma: PrismaClient | undefined;  // Changed var to const
-  interface Global {
-    prisma: PrismaClient | undefined;  // Added this line to extend the global interface
+  // Extending the NodeJS global interface for `prisma`
+  namespace NodeJS {
+    interface Global {
+      prisma: PrismaClient | undefined;
+    }
   }
 }
 
+// Declare and initialize Prisma client
 const prisma = global.prisma || new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'],  // Optional: Adds logging for easier debugging
+  log: ['query', 'info', 'warn', 'error'], // Enable logging
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma;
-}
+// Assign to global if not in production to avoid multiple instances
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
 
+// Ensure export compatibility
 export default prisma;

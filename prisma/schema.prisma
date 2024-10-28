@@ -25,5 +25,5 @@ model Profile {
   address     String?
   city        String?
   country     String?
-  user        users    @relation(fields: [userId], references: [id])
+  users        users    @relation(fields: [userId], references: [id])
 }

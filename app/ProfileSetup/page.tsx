@@ -1,3 +1,6 @@
+
+//app/ProfileSetup/page.tsx
+
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
