@@ -6,8 +6,8 @@ export default {
     async rewrites() {
       return [
         {
-          source: '/api/:path*',  // Proxy API requests
-          destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,  // Your backend URL
+          source: '/api/auth/login',  // Proxy API requests
+          destination: `${process.env.NEXT_PUBLIC_API_URL}/:http://localhost:3000/api*`,  // Your backend URL
         },
       ];
     },

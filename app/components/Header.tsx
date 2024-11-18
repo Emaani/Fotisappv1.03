@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ marketData = [] }) => {
             </button>
           </Link>
 
-          <Link href="/Login"> {/* Wrap the button with Link */}
+          <Link href="/login"> {/* Wrap the button with Link */}
             <button
               className="
                 font-sans text-sm font-semibold h-10 
