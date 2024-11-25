@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -35,10 +35,14 @@ const LoginPage = () => {
 
   useEffect(() => {
     const errorType = searchParams.get('error');
-    if (errorType === 'session_expired') setError('Your session has expired. Please log in again.');
+    if (errorType === 'session_expired') {
+      setError('Your session has expired. Please log in again.');
+    }
 
     const returnUrl = searchParams.get('returnUrl');
-    if (returnUrl) localStorage.setItem('loginReturnUrl', returnUrl);
+    if (returnUrl) {
+      localStorage.setItem('loginReturnUrl', returnUrl);
+    }
   }, [searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,25 +90,6 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
-
-  const checkConnection = async () => {
-    try {
-      await axios.get('/api/auth/login', { timeout: 5000 });
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const attemptConnection = async () => {
-      for (let i = 0; i < 3; i++) {
-        if (await checkConnection()) return;
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      }
-    };
-    attemptConnection();
-  }, []);
 
   const handleSocialLogin = (provider: 'google' | 'facebook') => {
     setIsLoading(true);

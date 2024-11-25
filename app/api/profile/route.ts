@@ -1,54 +1,44 @@
-// app/api/profile/setup/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/app/lib/prisma';
-import { z } from 'zod';
+import { prisma } from '@/app/lib/prisma';
+import { z } from "zod";
 
-// Validation schema for profile data
+// Validation Schema
 const profileSchema = z.object({
-  userId: z.string().transform((val) => parseInt(val)),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+  userId: z.string().transform(Number),
+  firstName: z.string().min(2, "First name must be at least 2 characters long"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters long"),
+  phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
   address: z.string().nullable(),
   city: z.string().nullable(),
   country: z.string().nullable(),
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // Parse form data
-    const formData = await request.formData();
-    const profileData = Object.fromEntries(formData.entries());
+    const formData = await req.formData();
+    const validatedData = profileSchema.parse(Object.fromEntries(formData));
 
-    // Validate the data
-    const validatedData = profileSchema.parse(profileData);
-
-    // Check if user exists
-    const user = await prisma.users.findUnique({
-      where: { id: validatedData.userId }
+    // Check if profile already exists
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId: validatedData.userId },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      );
+    if (existingProfile) {
+      return NextResponse.json({ error: "Profile already exists for this user" }, { status: 400 });
     }
 
-    // Create or update profile
-    const profile = await prisma.profile.upsert({
-      where: {
-        userId: validatedData.userId,
-      },
-      update: {
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-        phoneNumber: validatedData.phoneNumber,
-        address: validatedData.address,
-        city: validatedData.city,
-        country: validatedData.country,
-      },
-      create: {
+    // Handle profile picture upload
+    let profilePictureUrl = null;
+    const profilePicture = formData.get('profilePicture') as File | null;
+    if (profilePicture) {
+      // Here you would typically upload the file to a storage service
+      // and get back a URL. For this example, we'll just use a placeholder.
+      profilePictureUrl = '/placeholder-profile-picture.jpg';
+    }
+
+    // Create profile
+    const profile = await prisma.profile.create({
+      data: {
         userId: validatedData.userId,
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
@@ -56,39 +46,27 @@ export async function POST(request: NextRequest) {
         address: validatedData.address,
         city: validatedData.city,
         country: validatedData.country,
+        profilePicture: profilePictureUrl,
+        profileCompleted: true,
       },
     });
 
-    // Return success response with redirect URL
+    // Initialize wallet
+    await prisma.wallet.create({
+      data: {
+        userId: validatedData.userId,
+        balance: 0.0,
+        currency: "USD",
+      },
+    });
+
     return NextResponse.json({
       success: true,
+      message: "Profile created and wallet initialized successfully",
       profile,
-      redirectUrl: '/TradeCommodities'
-    });
-
+    }, { status: 201 });
   } catch (error) {
-    console.error('Profile setup error:', error);
-    
-    // Handle validation errors
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Validation failed', 
-          details: error.errors 
-        },
-        { status: 400 }
-      );
-    }
-
-    // Handle other errors
-    return NextResponse.json(
-      { success: false, error: 'Failed to save profile' },
-      { status: 500 }
-    );
+    console.error("Error creating profile and wallet:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-}
-
-export async function GET() {
-  return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
 }

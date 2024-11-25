@@ -1,42 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import  prisma  from '@/app/lib/prisma'
+import prisma from '@/app/lib/prisma'
 import { z } from 'zod'
 
 const signupSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6)
-})
+  password: z.string().min(8),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
+});
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password } = signupSchema.parse(body)
+    const validatedData = signupSchema.parse(body)
 
     // Check if user already exists
-    const existingUser = await prisma.users.findUnique({
-      where: { email }
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validatedData.email }
     })
 
     if (existingUser) {
       return NextResponse.json(
         { message: 'User already exists' },
-        { status: 400 }
+        { status: 409 }
       )
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(validatedData.password, 10)
 
     // Create new user
-    const user = await prisma.users.create({
+    const user = await prisma.user.create({
       data: {
-        email,
+        email: validatedData.email,
         password: hashedPassword,
+        role: 'user',
+        profile: {
+          create: {
+            firstName: '',
+            lastName: '',
+            phoneNumber: ''
+          }
+        }
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true
       }
     })
 
-    // Return user ID for profile setup
     return NextResponse.json({
       message: 'User created successfully',
       userId: user.id

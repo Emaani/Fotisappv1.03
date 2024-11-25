@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  balance   Float    @default(0.0)
+  currency  String   @default("USD")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
 model User {
   id           Int       @id @default(autoincrement())
   email        String    @unique @db.VarChar(255)
@@ -16,6 +25,7 @@ model User {
   refreshToken String?   @default("")
   updated_at   DateTime? @default(now()) @db.Timestamp(6)
   profile      Profile?
+  wallet       Wallet?
 }
 
 model Profile {
@@ -27,5 +37,5 @@ model Profile {
   address     String?
   city        String?
   country     String?
-  user        User    @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
