@@ -137,3 +137,50 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+.forgot-password-form {
+  text-align: center;
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background for contrast */
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  color: #4CAF50; /* Green color for the header */
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.email-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: black; /* Ensure text is black */
+  background-color: #ffffff; /* White background for better contrast */
+  caret-color: black; /* Black caret for consistency */
+}
+
+button {
+  background-color: #4CAF50; /* Green button */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: red;
+}

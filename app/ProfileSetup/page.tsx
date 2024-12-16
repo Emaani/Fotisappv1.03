@@ -1,6 +1,3 @@
-
-//app/ProfileSetup/page.tsx
-
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -71,14 +68,25 @@ const ProfileSetupPage: React.FC<ProfileSetupPageProps> = ({ userId }) => {
         formDataToSend.append("profilePicture", formData.profilePicture);
       }
 
+      // Get the token from local storage or context
+      const token = localStorage.getItem('authToken'); // Ensure this is set correctly after login
+
       await axios.post("/api/profile/setup", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}` // Include the token here
+        },
       });
 
       router.push("/TradeCommodities");
     } catch (err) {
       console.error("Profile setup failed:", err);
-      setError("Failed to complete profile setup. Please try again.");
+      if (axios.isAxiosError(err)) {
+        console.error("Error response:", err.response);
+        setError(err.response?.data?.error || "Failed to complete profile setup. Please try again.");
+      } else {
+        setError("Failed to complete profile setup. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

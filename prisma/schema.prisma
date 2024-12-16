@@ -26,6 +26,8 @@ model User {
   updated_at   DateTime? @default(now()) @db.Timestamp(6)
   profile      Profile?
   wallet       Wallet?
+
+
 }
 
 model Profile {
@@ -37,5 +39,9 @@ model Profile {
   address     String?
   city        String?
   country     String?
+  profilePicture  String?
+  profileCompleted Boolean  @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
